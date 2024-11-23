@@ -122,7 +122,7 @@ public class LoginForm extends javax.swing.JFrame {
                 new vista.admin.AdminDashboard().setVisible(true);
                 break;
             case "Profesor":
-                new vista.profesor.ProfesorDashboard().setVisible(true);
+                new vista.usuario.UsuarioDashboard(usuario.getIdUsuario()).setVisible(true);
                 break;
             case "Alumno":
                 new vista.usuario.UsuarioDashboard(usuario.getIdUsuario()).setVisible(true);
