@@ -28,6 +28,7 @@ public class GestionDevoluciones extends javax.swing.JFrame {
      */
     public GestionDevoluciones() {
         initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         prestamosController = new PrestamosController();
         configuracionController = new ConfiguracionSistemaController();
         modeloDevoluciones = new DefaultTableModel(new Object[]{"ID", "Usuario", "Ejemplar", "Fecha Préstamo", "Fecha Devolución", "Estado", "Mora"}, 0);

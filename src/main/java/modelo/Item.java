@@ -10,15 +10,15 @@ package modelo;
  */
 public class Item {
    private int idItem;
-    private String tipoItem; // "Libro", "Revista", "CD", "Tesis", "Obra", etc.
+    private String tipoItem; 
     private String titulo;
-    private String autor; // Opcional para tipos que no lo necesitan
-    private String editorial; // Opcional
-    private String genero; // Opcional
-    private int anioPublicacion; // Opcional
+    private String autor; 
+    private String editorial; 
+    private String genero;
+    private int anioPublicacion; 
     private String ubicacionFisica;
 
-    // Constructor vacío
+    
     public Item() {
     }
 

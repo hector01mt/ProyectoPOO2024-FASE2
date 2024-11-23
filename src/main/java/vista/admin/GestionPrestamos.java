@@ -38,6 +38,7 @@ public class GestionPrestamos extends javax.swing.JFrame {
      */
     public GestionPrestamos() {
         initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         prestamosController = new PrestamosController();
         itemController = new ItemController();
         usuariosController = new UsuariosController();

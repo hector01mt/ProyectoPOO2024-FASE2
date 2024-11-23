@@ -14,12 +14,12 @@ public class Prestamos {
     private int idPrestamo;
     private int idUsuario;
     private int idItem;
-    private String nombreUsuario; // Nuevo
+    private String nombreUsuario; 
     private String tituloEjemplar;
     private Date fechaPrestamo;
     private Date fechaDevolucion;
     private boolean devuelto;
-    private double mora; // Mora acumulada
+    private double mora; 
 
     // Constructor vacío
     public Prestamos() {}

@@ -21,6 +21,7 @@ public class ConfiguracionSistemaVista extends javax.swing.JFrame {
      */
     public ConfiguracionSistemaVista() {
         initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         controller = new ConfiguracionSistemaController();
         cargarConfiguracion();
     }

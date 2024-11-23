@@ -168,7 +168,7 @@ public class PrestamosDAO {
     }
     
      public int contarPrestamosActivosPorUsuario(int idUsuario) {
-        String query = "SELECT COUNT(*) FROM prestamos WHERE id_usuario = ? AND devuelto = false";
+        String query = "SELECT COUNT(*) FROM prestamos WHERE idUsuario = ? AND devuelto = false";
         try (Connection conn = Conexion.getConnection(); PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, idUsuario);
             ResultSet rs = stmt.executeQuery();

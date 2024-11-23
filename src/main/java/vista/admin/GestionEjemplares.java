@@ -24,7 +24,8 @@ public class GestionEjemplares extends javax.swing.JFrame {
      * Creates new form GestionEjemplares
      */
     public GestionEjemplares() {
-        initComponents();
+        initComponents(); 
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         itemController = new ItemController();
         cmbTipo.setModel(new DefaultComboBoxModel<>(new String[]{"Libro", "Revista", "CD", "Tesis", "Documento"}));
         tableModel = new DefaultTableModel(new Object[]{"ID", "Título", "Tipo", "Autor", "Año", "Ubicación"}, 0);

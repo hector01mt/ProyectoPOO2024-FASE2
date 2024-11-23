@@ -67,6 +67,8 @@ public class PrestamosController {
             System.out.println("No se pudo obtener la configuración del sistema.");
             return false; // Devuelve falso por seguridad
         }
+        System.out.println("Préstamos activos para el usuario " + idUsuario + ": " + prestamosActivos);
+        System.out.println("Límite máximo permitido: " + configuracion.getMaxEjemplares());
         return prestamosActivos < configuracion.getMaxEjemplares();
     }
 

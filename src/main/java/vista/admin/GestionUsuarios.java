@@ -23,6 +23,7 @@ public class GestionUsuarios extends javax.swing.JFrame {
      */
     public GestionUsuarios() {
         initComponents();
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         usuariosController = new UsuariosController();
         cmbTipoUsuario.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Admin", "Alumno", "Profesor" }));
         tableModel = new DefaultTableModel(new Object[]{"ID", "Nombre", "Email", "Tipo"}, 0);

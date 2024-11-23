@@ -34,9 +34,9 @@ public class LoginController {
             case "Admin":
                 return "AdminDashboard";
             case "Profesor":
-                return "ProfesorDashboard";
+                return "UsuarioDashboard";
             case "Alumno":
-                return "AlumnoDashboard";
+                return "UsuarioDashboard";
             default:
                 return "Error: Tipo de usuario no reconocido";
         }
