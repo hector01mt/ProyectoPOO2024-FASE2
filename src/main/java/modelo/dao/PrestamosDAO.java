@@ -76,7 +76,7 @@ public class PrestamosDAO {
 }
 
     // Listar préstamos por usuario
-    public List<Prestamos> listarPrestamosPorUsuario(int idUsuario) {
+    /*public List<Prestamos> listarPrestamosPorUsuario(int idUsuario) {
         List<Prestamos> prestamos = new ArrayList<>();
         String sql = "SELECT * FROM prestamos WHERE idUsuario = ?";
         try (Connection conn = Conexion.getConnection();
@@ -93,7 +93,37 @@ public class PrestamosDAO {
         }
         return prestamos;
     }
+    */
     
+    public List<Prestamos> listarPrestamosPorUsuario(int idUsuario) {
+    List<Prestamos> prestamos = new ArrayList<>();
+    String sql = "SELECT p.*, i.titulo AS tituloEjemplar " +
+                 "FROM prestamos p " +
+                 "JOIN items i ON p.idItem = i.idItem " +
+                 "WHERE p.idUsuario = ?";
+    try (Connection conn = Conexion.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+        stmt.setInt(1, idUsuario);
+        try (ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Prestamos prestamo = new Prestamos(
+                    rs.getInt("idPrestamo"),
+                    rs.getInt("idUsuario"),
+                    rs.getInt("idItem"),
+                    rs.getDate("fechaPrestamo"),
+                    rs.getDate("fechaDevolucion"),
+                    rs.getBoolean("devuelto"),
+                    rs.getDouble("mora")
+                );
+                prestamo.setTituloEjemplar(rs.getString("tituloEjemplar")); // Asignar el título
+                prestamos.add(prestamo);
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return prestamos;
+}
     public List<Prestamos> listarPrestamosConDetalles() {
         List<Prestamos> prestamos = new ArrayList<>();
         String sql = "SELECT p.idPrestamo, u.nombreUsuario, i.titulo, p.fechaPrestamo, "

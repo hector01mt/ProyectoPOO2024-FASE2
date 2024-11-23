@@ -125,7 +125,7 @@ public class LoginForm extends javax.swing.JFrame {
                 new vista.profesor.ProfesorDashboard().setVisible(true);
                 break;
             case "Alumno":
-                new vista.alumno.AlumnoDashboard().setVisible(true);
+                new vista.usuario.UsuarioDashboard(usuario.getIdUsuario()).setVisible(true);
                 break;
             default:
                 JOptionPane.showMessageDialog(this, "Tipo de usuario desconocido.", "Error", JOptionPane.ERROR_MESSAGE);
