@@ -6,10 +6,7 @@ package modelo;
 
 import java.sql.Date;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class Prestamos {
     private int idPrestamo;
     private int idUsuario;

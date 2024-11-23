@@ -4,10 +4,7 @@
  */
 package modelo;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class ConfiguracionSistema {
     private double moraDiaria;
     private int maxEjemplares;

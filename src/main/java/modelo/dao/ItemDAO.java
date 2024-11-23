@@ -14,12 +14,10 @@ import java.util.List;
 import modelo.Conexion;
 import modelo.Item;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class ItemDAO {
-  // Método para insertar un nuevo item
+    
+  // insertar un nuevo item
     public boolean insertarItem(Item item) {
         String sql = "INSERT INTO items (tipoItem, titulo, autor, editorial, genero, anioPublicacion, ubicacionFisica) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -39,7 +37,7 @@ public class ItemDAO {
         }
     }
 
-    // Método para buscar items por título o autor
+    // buscar items por título o autor
     public List<Item> buscarItems(String criterioBusqueda) {
         List<Item> items = new ArrayList<>();
         String sql = "SELECT * FROM items WHERE titulo LIKE ? OR autor LIKE ?";
@@ -58,7 +56,7 @@ public class ItemDAO {
         return items;
     }
 
-    // Método para eliminar un item por ID
+    // eliminar un item por ID
     public boolean eliminarItem(int idItem) {
         String sql = "DELETE FROM items WHERE idItem = ?";
         try (Connection conn = Conexion.getConnection();
@@ -71,7 +69,7 @@ public class ItemDAO {
         }
     }
 
-    // Método para actualizar un item
+    // actualizar un item
     public boolean actualizarItem(Item item) {
         String sql = "UPDATE items SET tipoItem = ?, titulo = ?, autor = ?, editorial = ?, genero = ?, anioPublicacion = ?, ubicacionFisica = ? WHERE idItem = ?";
         try (Connection conn = Conexion.getConnection();
@@ -91,7 +89,7 @@ public class ItemDAO {
         }
     }
 
-    // Método para listar todos los items
+    // listar todos los items
     public List<Item> listarTodos() {
         List<Item> items = new ArrayList<>();
         String sql = "SELECT * FROM items";

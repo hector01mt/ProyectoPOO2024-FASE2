@@ -9,10 +9,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JOptionPane;
 import modelo.ConfiguracionSistema;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class ConfiguracionSistemaVista extends javax.swing.JFrame {
 
     private final ConfiguracionSistemaController controller;

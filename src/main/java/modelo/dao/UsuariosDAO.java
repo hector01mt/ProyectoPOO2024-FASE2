@@ -14,12 +14,10 @@ import java.util.List;
 import modelo.Conexion;
 import modelo.Usuarios;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class UsuariosDAO {
-    // Método para insertar un nuevo usuario
+    
+    // insertar un nuevo usuario
     public boolean insertarUsuario(Usuarios usuario) {
         String sql = "INSERT INTO usuarios (nombreUsuario, email, contrasena, tipoUsuario, activo) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = Conexion.getConnection();
@@ -36,7 +34,7 @@ public class UsuariosDAO {
         }
     }
 
-    // Método para buscar usuarios por nombre o email
+    // buscar usuarios por nombre o email
     public List<Usuarios> buscarUsuarios(String criterioBusqueda) {
         List<Usuarios> usuarios = new ArrayList<>();
         String sql = "SELECT * FROM usuarios WHERE nombreUsuario LIKE ? OR email LIKE ?";
@@ -55,8 +53,8 @@ public class UsuariosDAO {
         return usuarios;
     }
 
-    // Método para eliminar un usuario por ID
-    public boolean eliminarUsuario(int idUsuario) {
+    // eliminar un usuario por ID
+    /*public boolean eliminarUsuario(int idUsuario) {
         String sql = "UPDATE usuarios SET activo = FALSE WHERE idUsuario = ?";
         try (Connection conn = Conexion.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -66,9 +64,9 @@ public class UsuariosDAO {
             e.printStackTrace();
             return false;
         }
-    }
+    }*/
 
-    // Método para actualizar un usuario
+    // actualizar un usuario
     public boolean actualizarUsuario(Usuarios usuario) {
         String sql = "UPDATE usuarios SET nombreUsuario = ?, email = ?, contrasena = ?, tipoUsuario = ? WHERE idUsuario = ?";
         try (Connection conn = Conexion.getConnection();
@@ -85,7 +83,7 @@ public class UsuariosDAO {
         }
     }
 
-    // Método para listar todos los usuarios
+    // listar todos los usuarios
     public List<Usuarios> listarTodos() {
         List<Usuarios> usuarios = new ArrayList<>();
         String sql = "SELECT * FROM usuarios WHERE activo = TRUE";
@@ -101,7 +99,7 @@ public class UsuariosDAO {
         return usuarios;
     }
 
-    // Método para autenticar un usuario
+    // autenticar un usuario
     public Usuarios autenticarUsuario(String email, String contrasena) {
         String sql = "SELECT * FROM usuarios WHERE email = ? AND contrasena = ? AND activo = TRUE";
         try (Connection conn = Conexion.getConnection();

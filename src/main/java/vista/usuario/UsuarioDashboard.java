@@ -15,10 +15,7 @@ import javax.swing.table.TableRowSorter;
 import modelo.Item;
 import modelo.Prestamos;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class UsuarioDashboard extends javax.swing.JFrame {
     
     private final PrestamosController prestamosController;

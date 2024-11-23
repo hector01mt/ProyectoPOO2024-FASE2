@@ -13,10 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import modelo.Prestamos;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class GestionDevoluciones extends javax.swing.JFrame {
     
     private final PrestamosController prestamosController;

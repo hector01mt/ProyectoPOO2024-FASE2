@@ -7,10 +7,7 @@ package controlador;
 import modelo.Usuarios;
 import modelo.dao.UsuariosDAO;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class LoginController {
      private final UsuariosDAO usuariosDAO;
 

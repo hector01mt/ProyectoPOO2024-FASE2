@@ -17,10 +17,7 @@ import modelo.Item;
 import modelo.Prestamos;
 import modelo.Usuarios;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class GestionPrestamos extends javax.swing.JFrame {
 
     private final PrestamosController prestamosController;

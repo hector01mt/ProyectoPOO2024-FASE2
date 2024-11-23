@@ -9,18 +9,13 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Usuarios;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class GestionUsuarios extends javax.swing.JFrame {
     
     private final UsuariosController usuariosController;
     private final DefaultTableModel tableModel;
     
-    /**
-     * Creates new form GestionUsuarios
-     */
+    
     public GestionUsuarios() {
         initComponents();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -90,7 +85,7 @@ public class GestionUsuarios extends javax.swing.JFrame {
         }
     }
     
-    private void eliminarUsuario() {
+    /*private void eliminarUsuario() {
         int selectedRow = tblUsuarios.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Seleccione un usuario para eliminar.", "Error", JOptionPane.WARNING_MESSAGE);
@@ -108,7 +103,7 @@ public class GestionUsuarios extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Error al eliminar usuario.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
+    }*/
     
     private void desactivarUsuario() {
         int selectedRow = tblUsuarios.getSelectedRow();

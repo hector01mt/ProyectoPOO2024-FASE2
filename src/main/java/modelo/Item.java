@@ -4,10 +4,7 @@
  */
 package modelo;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class Item {
    private int idItem;
     private String tipoItem; 

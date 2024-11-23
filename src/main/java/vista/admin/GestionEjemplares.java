@@ -11,10 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import modelo.Item;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class GestionEjemplares extends javax.swing.JFrame {
     
     private final ItemController itemController;

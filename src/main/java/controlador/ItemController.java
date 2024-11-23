@@ -8,10 +8,7 @@ import java.util.List;
 import modelo.Item;
 import modelo.dao.ItemDAO;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class ItemController {
    private final ItemDAO itemDAO;
 

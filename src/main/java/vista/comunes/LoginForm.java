@@ -8,10 +8,7 @@ import controlador.LoginController;
 import javax.swing.JOptionPane;
 import modelo.Usuarios;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class LoginForm extends javax.swing.JFrame {
     
      private final LoginController loginController;

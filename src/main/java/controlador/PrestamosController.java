@@ -10,10 +10,7 @@ import modelo.ConfiguracionSistema;
 import modelo.Prestamos;
 import modelo.dao.PrestamosDAO;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class PrestamosController {
     
     private final PrestamosDAO prestamoDAO;

@@ -11,10 +11,7 @@ import java.sql.SQLException;
 import modelo.Conexion;
 import modelo.ConfiguracionSistema;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class ConfiguracionSistemaDao {
     
      public ConfiguracionSistema obtenerConfiguracion() {

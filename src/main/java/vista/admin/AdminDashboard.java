@@ -4,10 +4,7 @@
  */
 package vista.admin;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class AdminDashboard extends javax.swing.JFrame {
 
     /**

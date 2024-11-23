@@ -6,10 +6,7 @@ package com.mycompany.amigosdedonbosco24;
 
 import vista.comunes.LoginForm;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class Main {
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(() -> {

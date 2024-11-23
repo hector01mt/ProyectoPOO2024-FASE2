@@ -4,10 +4,7 @@
  */
 package modelo;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class Usuarios {
     private int idUsuario;
     private String nombreUsuario;

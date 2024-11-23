@@ -7,10 +7,7 @@ package controlador;
 import modelo.dao.ConfiguracionSistemaDao;
 import modelo.ConfiguracionSistema;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class ConfiguracionSistemaController {
     
      private final ConfiguracionSistemaDao dao;

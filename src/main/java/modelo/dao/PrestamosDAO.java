@@ -14,13 +14,10 @@ import java.util.List;
 import modelo.Conexion;
 import modelo.Prestamos;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class PrestamosDAO {
     
-     // Crear un nuevo préstamo
+     // crear un nuevo préstamo
     public boolean insertarPrestamo(Prestamos prestamo) {
         String sql = "INSERT INTO prestamos (idUsuario, idItem, fechaPrestamo, fechaDevolucion, devuelto, mora) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = Conexion.getConnection();
@@ -38,7 +35,7 @@ public class PrestamosDAO {
         }
     }
 
-    // Actualizar estado del préstamo (devolución)
+    // actualizar estado del prestamo 
     public boolean marcarDevuelto(int idPrestamo, double mora) {
         String sql = "UPDATE prestamos SET devuelto = ?, mora = ? WHERE idPrestamo = ?";
         try (Connection conn = Conexion.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -75,7 +72,7 @@ public class PrestamosDAO {
     return prestamos;
 }
 
-    // Listar préstamos por usuario
+    // Listar prestamos por usuario
     /*public List<Prestamos> listarPrestamosPorUsuario(int idUsuario) {
         List<Prestamos> prestamos = new ArrayList<>();
         String sql = "SELECT * FROM prestamos WHERE idUsuario = ?";

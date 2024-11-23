@@ -9,10 +9,7 @@ import javax.swing.JOptionPane;
 import modelo.Usuarios;
 import modelo.dao.UsuariosDAO;
 
-/**
- *
- * @author Hector Marquez
- */
+
 public class UsuariosController {
     private final UsuariosDAO usuariosDAO;
 
@@ -21,32 +18,32 @@ public class UsuariosController {
         this.usuariosDAO = new UsuariosDAO();
     }
 
-    // Método para agregar un nuevo usuario
+    // agregar un nuevo usuario
     public boolean agregarUsuario(Usuarios usuario) {
         return usuariosDAO.insertarUsuario(usuario);
     }
 
-    // Método para buscar usuarios por nombre o email
+    // buscar usuarios por nombre o email
     public List<Usuarios> buscarUsuarios(String criterioBusqueda) {
         return usuariosDAO.buscarUsuarios(criterioBusqueda);
     }
 
-    // Método para eliminar un usuario por ID
-    public boolean eliminarUsuario(int idUsuario) {
+    // eliminar un usuario por ID
+    /*public boolean eliminarUsuario(int idUsuario) {
         return usuariosDAO.eliminarUsuario(idUsuario);
-    }
+    }*/
 
-    // Método para actualizar la información de un usuario
+    // actualizar la información de un usuario
     public boolean actualizarUsuario(Usuarios usuario) {
         return usuariosDAO.actualizarUsuario(usuario);
     }
 
-    // Método para listar todos los usuarios
+    // listar todos los usuarios
     public List<Usuarios> listarUsuarios() {
         return usuariosDAO.listarTodos();
     }
 
-    // Método para autenticar un usuario
+    // autenticar un usuario
     public Usuarios autenticarUsuario(String email, String contrasena) {
         return usuariosDAO.autenticarUsuario(email, contrasena);
     }
