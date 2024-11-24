@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import modelo.Item;
 import modelo.Prestamos;
+import vista.comunes.LoginForm;
 
 
 public class UsuarioDashboard extends javax.swing.JFrame {
@@ -335,11 +336,17 @@ public class UsuarioDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDevolverLibroActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
-        this.dispose();
-
-        java.awt.EventQueue.invokeLater(() -> {
-            new vista.comunes.LoginForm().setVisible(true);
-        });
+        int opcion = JOptionPane.showConfirmDialog(this, "¿Desea cerrar sesión?", "Confirmar", JOptionPane.YES_NO_OPTION);
+        if (opcion == JOptionPane.YES_OPTION) {
+            this.dispose();
+            java.awt.EventQueue.invokeLater(() -> {
+                try {
+                    new LoginForm().setVisible(true); 
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al abrir el login: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            });
+        }
     }//GEN-LAST:event_btnSalirActionPerformed
 
     /**
