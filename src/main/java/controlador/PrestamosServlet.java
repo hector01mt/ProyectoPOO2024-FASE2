@@ -40,20 +40,24 @@ public class PrestamosServlet extends HttpServlet {
             Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 
             if (usuario != null) {
-                // Obtener ítems disponibles
-                List<Item> items = itemDAO.listarTodos();
+                if ("Admin".equals(usuario.getTipoUsuario())) {
+                    // Obtener datos necesarios para la vista de administración
+                    List<Prestamos> prestamos = prestamosDAO.listarPrestamosConDetalles();
+                    List<Usuarios> usuarios = usuariosDAO.listarTodos();
+                    List<Item> items = itemDAO.listarTodos();
 
-                // Filtrar préstamos activos por usuario autenticado
-                List<Prestamos> prestamosActivos = prestamosDAO.listarPrestamosPorUsuario(usuario.getIdUsuario());
+                    // Asegurarse de enviar datos al JSP
+                    request.setAttribute("prestamos", prestamos);
+                    request.setAttribute("usuarios", usuarios);
+                    request.setAttribute("items", items);
 
-                // Enviar datos al JSP
-                request.setAttribute("items", items);
-                request.setAttribute("prestamosActivos", prestamosActivos);
-                request.setAttribute("usuario", usuario);
-
-                request.getRequestDispatcher("/jsp/usuariosDashboard.jsp").forward(request, response);
+                    request.getRequestDispatcher("/jsp/prestamos.jsp").forward(request, response);
+                } else {
+                    // Redirigir al dashboard de usuario si no es admin
+                    response.sendRedirect(request.getContextPath() + "/usuariosDashboard");
+                }
             } else {
-                // Si no hay usuario autenticado, redirigir al login
+                // Redirigir al login si no hay sesión activa
                 response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
             }
         } catch (Exception e) {

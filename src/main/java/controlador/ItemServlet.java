@@ -21,20 +21,21 @@ import java.util.List;
 @WebServlet("/items")
 public class ItemServlet extends HttpServlet {
      private final ItemDAO itemDAO = new ItemDAO();
-
-    @Override
+     
+     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String criterio = request.getParameter("criterio");
-        List<Item> items = (criterio == null || criterio.isEmpty()) ? 
-                            itemDAO.listarTodos() : 
-                            itemDAO.listarTodos().stream()
-                                .filter(item -> item.getTitulo().toLowerCase().contains(criterio.toLowerCase()) || 
-                                                item.getAutor().toLowerCase().contains(criterio.toLowerCase()))
-                                .toList();
+        List<Item> items = (criterio == null || criterio.isEmpty())
+                ? itemDAO.listarTodos()
+                : itemDAO.listarTodos().stream()
+                        .filter(item -> item.getTitulo().toLowerCase().contains(criterio.toLowerCase())
+                        || item.getAutor().toLowerCase().contains(criterio.toLowerCase()))
+                        .toList();
 
         request.setAttribute("items", items);
         request.setAttribute("criterio", criterio);
+
         request.getRequestDispatcher("/jsp/items.jsp").forward(request, response);
     }
 
