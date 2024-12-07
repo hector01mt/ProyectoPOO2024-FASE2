@@ -33,6 +33,15 @@ public class Prestamos {
         this.devuelto = devuelto;
         this.mora = mora;
     }
+    
+    public Prestamos(int idUsuario, int idItem, java.util.Date fechaPrestamo, java.util.Date fechaDevolucion, boolean devuelto, double mora) {
+        this.idUsuario = idUsuario;
+        this.idItem = idItem;
+        this.fechaPrestamo = new java.sql.Date(fechaPrestamo.getTime());
+        this.fechaDevolucion = new java.sql.Date(fechaDevolucion.getTime());
+        this.devuelto = devuelto;
+        this.mora = mora;
+    }
 
     // Constructor completo
     public Prestamos (int idPrestamo, int idUsuario, int idItem, Date fechaPrestamo, Date fechaDevolucion, boolean devuelto, double mora) {
