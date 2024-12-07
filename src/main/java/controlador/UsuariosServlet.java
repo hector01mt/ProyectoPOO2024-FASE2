@@ -24,61 +24,53 @@ public class UsuariosServlet extends HttpServlet {
     private final UsuariosDAO usuariosDAO = new UsuariosDAO(); // Instancia del DAO
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        List<Usuarios> usuarios = usuariosDAO.listarTodos();
-        request.setAttribute("usuarios", usuarios);
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Cargar lista de usuarios
+        request.setAttribute("usuarios", usuariosDAO.listarTodos());
         request.getRequestDispatcher("/jsp/usuarios.jsp").forward(request, response);
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String accion = request.getParameter("accion");
+        String mensaje;
 
-        if ("guardar".equals(accion)) {
-            String idUsuarioParam = request.getParameter("idUsuario");
-            int idUsuario = (idUsuarioParam != null && !idUsuarioParam.isEmpty()) ? Integer.parseInt(idUsuarioParam) : 0;
+        try {
+            if ("guardar".equals(accion) || "editar".equals(accion)) {
+                int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+                String nombre = request.getParameter("nombre");
+                String email = request.getParameter("email");
+                String contrasena = request.getParameter("contrasena");
+                String tipoUsuario = request.getParameter("tipoUsuario");
 
-            String nombre = request.getParameter("nombre");
-            String email = request.getParameter("email");
-            String contrasena = request.getParameter("contrasena");
-            String tipoUsuario = request.getParameter("tipoUsuario");
+                Usuarios usuario = new Usuarios(idUsuario, nombre, email, contrasena, tipoUsuario);
 
-            Usuarios usuario = new Usuarios(idUsuario, nombre, email, contrasena, tipoUsuario);
-            if (idUsuario == 0) {
-                usuariosDAO.insertarUsuario(usuario);
+                if ("guardar".equals(accion)) {
+                    usuariosDAO.insertarUsuario(usuario);
+                    mensaje = "Usuario guardado exitosamente.";
+                } else {
+                    usuariosDAO.actualizarUsuario(usuario);
+                    mensaje = "Usuario actualizado exitosamente.";
+                }
+            } else if ("desactivar".equals(accion)) {
+                int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+                usuariosDAO.desactivarUsuario(idUsuario);
+                mensaje = "Usuario desactivado exitosamente.";
+            } else if ("restablecer".equals(accion)) {
+                int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+                String nuevaContrasena = request.getParameter("contrasena");
+                usuariosDAO.restablecerContrasena(idUsuario, nuevaContrasena);
+                mensaje = "Contraseña restablecida exitosamente.";
             } else {
-                usuariosDAO.actualizarUsuario(usuario);
-            }
-        } else if ("editar".equals(accion)) {
-            int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-
-            // Usamos listarTodos y filtramos el usuario por ID
-            Usuarios usuario = usuariosDAO.listarTodos().stream()
-                    .filter(u -> u.getIdUsuario() == idUsuario)
-                    .findFirst()
-                    .orElse(null);
-
-            if (usuario != null) {
-                request.setAttribute("usuario", usuario);
+                mensaje = "Acción desconocida.";
             }
 
-            // Cargar nuevamente los datos para la página
-            List<Usuarios> usuarios = usuariosDAO.listarTodos();
-            request.setAttribute("usuarios", usuarios);
-            request.getRequestDispatcher("/jsp/usuarios.jsp").forward(request, response);
-        } else if ("desactivar".equals(accion)) {
-            int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-            usuariosDAO.desactivarUsuario(idUsuario);
-        } else if ("restablecer".equals(accion)) {
-            int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
-            String nuevaContrasena = "123456"; // Restablecer a una contraseña predeterminada
-            usuariosDAO.restablecerContrasena(idUsuario, nuevaContrasena);
+            // Redirigir tras acción
+            response.sendRedirect(request.getContextPath() + "/usuarios?mensaje=" + mensaje);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/usuarios?error=Ocurrió un error al procesar la solicitud.");
         }
-
-        response.sendRedirect("usuarios");
     }
-    
     
 }

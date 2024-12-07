@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import modelo.Prestamos;
 import modelo.dao.PrestamosDAO;
 import modelo.dao.UsuariosDAO;
@@ -35,15 +36,26 @@ public class PrestamosServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            List<Usuarios> usuarios = usuariosDAO.listarTodos();
-            List<Item> items = itemDAO.listarTodos();
-            List<Prestamos> prestamos = prestamosDAO.listarPrestamosConDetalles();
+            HttpSession session = request.getSession();
+            Usuarios usuario = (Usuarios) session.getAttribute("usuario");
 
-            request.setAttribute("usuarios", usuarios);
-            request.setAttribute("items", items);
-            request.setAttribute("prestamos", prestamos);
+            if (usuario != null) {
+                // Obtener ítems disponibles
+                List<Item> items = itemDAO.listarTodos();
 
-            request.getRequestDispatcher("/jsp/prestamos.jsp").forward(request, response);
+                // Filtrar préstamos activos por usuario autenticado
+                List<Prestamos> prestamosActivos = prestamosDAO.listarPrestamosPorUsuario(usuario.getIdUsuario());
+
+                // Enviar datos al JSP
+                request.setAttribute("items", items);
+                request.setAttribute("prestamosActivos", prestamosActivos);
+                request.setAttribute("usuario", usuario);
+
+                request.getRequestDispatcher("/jsp/usuariosDashboard.jsp").forward(request, response);
+            } else {
+                // Si no hay usuario autenticado, redirigir al login
+                response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Error al cargar los datos: " + e.getMessage());
@@ -55,72 +67,77 @@ public class PrestamosServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String accion = request.getParameter("accion");
+        Usuarios usuario = (Usuarios) request.getSession().getAttribute("usuario");
+
+        if (usuario == null) {
+            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            return;
+        }
 
         try {
             if ("crear".equals(accion)) {
-                crearPrestamo(request);
+                crearPrestamo(request, usuario);
             } else if ("devolver".equals(accion)) {
                 devolverPrestamo(request);
-            } else if ("buscar".equals(accion)) {
-                buscarDatos(request, response);
-                return; // Evitar redirección después de búsqueda
             }
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("error", "Ocurrió un error: " + e.getMessage());
             request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
+            return;
         }
 
-        response.sendRedirect("prestamos");
+        response.sendRedirect(request.getContextPath() + "/prestamos");
     }
 
-    private void crearPrestamo(HttpServletRequest request) {
-        int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+    private void cargarDatosAdmin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Usuarios> usuarios = usuariosDAO.listarTodos();
+        List<modelo.Item> items = itemDAO.listarTodos();
+        List<Prestamos> prestamos = prestamosDAO.listarPrestamosConDetalles();
+
+        request.setAttribute("usuarios", usuarios);
+        request.setAttribute("items", items);
+        request.setAttribute("prestamos", prestamos);
+        request.getRequestDispatcher("/jsp/prestamos.jsp").forward(request, response);
+    }
+
+    private void cargarDatosUsuario(HttpServletRequest request, HttpServletResponse response, Usuarios usuario)
+            throws ServletException, IOException {
+        List<Prestamos> prestamosActivos = prestamosDAO.listarPrestamosPorUsuario(usuario.getIdUsuario());
+        List<modelo.Item> items = itemDAO.listarTodos();
+
+        request.setAttribute("prestamosActivos", prestamosActivos);
+        request.setAttribute("items", items);
+
+        String mensaje = (String) request.getSession().getAttribute("mensaje");
+        if (mensaje != null) {
+            request.setAttribute("mensaje", mensaje);
+            request.getSession().removeAttribute("mensaje");
+        }
+
+        request.getRequestDispatcher("/jsp/usuariosDashboard.jsp").forward(request, response);
+    }
+
+    private void crearPrestamo(HttpServletRequest request, Usuarios usuario) throws IOException {
+        int idUsuario = usuario.getIdUsuario();
         int idItem = Integer.parseInt(request.getParameter("idItem"));
-        Date fechaPrestamo = Date.valueOf(request.getParameter("fechaPrestamo"));
-        Date fechaDevolucion = Date.valueOf(request.getParameter("fechaDevolucion"));
+        Date fechaPrestamo = new Date(System.currentTimeMillis());
+        Date fechaDevolucion = new Date(System.currentTimeMillis() + 7 * 24 * 60 * 60 * 1000);
 
         Prestamos prestamo = new Prestamos(0, idUsuario, idItem, fechaPrestamo, fechaDevolucion, false, 0.0);
-        prestamosDAO.insertarPrestamo(prestamo);
+        if (!prestamosDAO.insertarPrestamo(prestamo)) {
+            throw new IllegalStateException("Error al registrar el préstamo.");
+        }
+
+        request.getSession().setAttribute("mensaje", "Préstamo registrado con éxito.");
     }
 
-    private void devolverPrestamo(HttpServletRequest request) {
+    private void devolverPrestamo(HttpServletRequest request) throws IOException {
         int idPrestamo = Integer.parseInt(request.getParameter("idPrestamo"));
-        prestamosDAO.marcarDevuelto(idPrestamo, 0.0);
-    }
-
-    private void buscarDatos(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        String criterioUsuario = request.getParameter("criterioUsuario");
-        String criterioItem = request.getParameter("criterioItem");
-        String criterioPrestamo = request.getParameter("criterioPrestamo");
-
-        // Filtrar Usuarios
-        List<Usuarios> usuariosFiltrados = usuariosDAO.listarTodos().stream()
-                .filter(usuario -> (criterioUsuario != null && !criterioUsuario.isEmpty())
-                && (usuario.getNombreUsuario().toLowerCase().contains(criterioUsuario.toLowerCase())
-                || usuario.getEmail().toLowerCase().contains(criterioUsuario.toLowerCase())))
-                .toList();
-        request.setAttribute("usuarios", usuariosFiltrados);
-
-        // Filtrar Ítems
-        List<Item> itemsFiltrados = itemDAO.listarTodos().stream()
-                .filter(item -> (criterioItem != null && !criterioItem.isEmpty())
-                && (item.getTitulo().toLowerCase().contains(criterioItem.toLowerCase())
-                || item.getAutor().toLowerCase().contains(criterioItem.toLowerCase())))
-                .toList();
-        request.setAttribute("items", itemsFiltrados);
-
-        // Filtrar Préstamos
-        List<Prestamos> prestamosFiltrados = prestamosDAO.listarPrestamosConDetalles().stream()
-                .filter(prestamo -> (criterioPrestamo != null && !criterioPrestamo.isEmpty())
-                && (prestamo.getNombreUsuario().toLowerCase().contains(criterioPrestamo.toLowerCase())
-                || prestamo.getTituloEjemplar().toLowerCase().contains(criterioPrestamo.toLowerCase())))
-                .toList();
-        request.setAttribute("prestamos", prestamosFiltrados);
-
-        // Redirigir a la página de préstamos
-        request.getRequestDispatcher("/jsp/prestamos.jsp").forward(request, response);
+        if (!prestamosDAO.marcarDevuelto(idPrestamo, 0.0)) {
+            throw new IllegalStateException("Error al devolver el préstamo.");
+        }
     }
 
 }

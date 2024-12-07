@@ -5,51 +5,61 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Panel de Administración</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                text-align: center;
-                padding: 20px;
-            }
-            h1 {
-                color: #333;
-            }
-            .button-container {
-                display: flex;
-                justify-content: center;
-                flex-wrap: wrap;
-                gap: 20px;
-                margin-top: 30px;
-            }
-            .button {
-                padding: 15px 30px;
-                font-size: 16px;
-                color: white;
-                background-color: #007BFF;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-                text-decoration: none;
-            }
-            .button:hover {
-                background-color: #0056b3;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>Panel de Administración</h1>
-        <p>Seleccione una opción para gestionar el sistema:</p>
+<%
+    // Evitar caché
+    response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    response.setHeader("Pragma", "no-cache");
+    response.setDateHeader("Expires", 0);
 
-        <div class="button-container">
-            <a href="${pageContext.request.contextPath}/usuarios" class="button">Gestionar Usuarios</a>
-            <a href="${pageContext.request.contextPath}/items" class="button">Gestionar Ítems</a>
-            <a href="${pageContext.request.contextPath}/prestamos" class="button">Gestionar Préstamos</a>
-            <a href="${pageContext.request.contextPath}/devoluciones" class="button">Gestionar Devoluciones</a>
-            <a href="${pageContext.request.contextPath}/configuracion" class="button">Configuración del Sistema</a>
+    // Verificar si el usuario está autenticado
+    if (session.getAttribute("usuario") == null) {
+        response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+        return;
+    }
+%>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-3">
+        <!-- Botón de Cerrar Sesión -->
+        <div class="d-flex justify-content-end">
+            <form method="get" action="${pageContext.request.contextPath}/logout">
+                <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
+            </form>
         </div>
-    </body> 
+        
+        <!-- Encabezado -->
+        <div class="text-center mt-3">
+            <h1 class="mb-4 text-primary">Panel de Administración</h1>
+            <p class="mb-4">Seleccione una opción para gestionar el sistema:</p>
+        </div>
+        
+        <!-- Opciones de Administración -->
+        <div class="row g-3 justify-content-center">
+            <div class="col-12 col-md-4">
+                <a href="${pageContext.request.contextPath}/usuarios" class="btn btn-primary w-100 py-3">Gestionar Usuarios</a>
+            </div>
+            <div class="col-12 col-md-4">
+                <a href="${pageContext.request.contextPath}/items" class="btn btn-primary w-100 py-3">Gestionar Ítems</a>
+            </div>
+            <div class="col-12 col-md-4">
+                <a href="${pageContext.request.contextPath}/prestamos" class="btn btn-primary w-100 py-3">Gestionar Préstamos</a>
+            </div>
+            <div class="col-12 col-md-4">
+                <a href="${pageContext.request.contextPath}/devoluciones" class="btn btn-primary w-100 py-3">Gestionar Devoluciones</a>
+            </div>
+            <div class="col-12 col-md-4">
+                <a href="${pageContext.request.contextPath}/configuracion" class="btn btn-primary w-100 py-3">Configuración del Sistema</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
