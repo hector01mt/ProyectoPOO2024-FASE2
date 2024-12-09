@@ -37,12 +37,19 @@ public class UsuariosServlet extends HttpServlet {
 
         try {
             if ("guardar".equals(accion) || "editar".equals(accion)) {
-                int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+                // Validar idUsuario antes de convertirlo
+                String idUsuarioParam = request.getParameter("idUsuario");
+                int idUsuario = (idUsuarioParam != null && !idUsuarioParam.isEmpty())
+                                ? Integer.parseInt(idUsuarioParam)
+                                : 0;
+
+                // Obtener los demás parámetros
                 String nombre = request.getParameter("nombre");
                 String email = request.getParameter("email");
                 String contrasena = request.getParameter("contrasena");
                 String tipoUsuario = request.getParameter("tipoUsuario");
 
+                // Crear el usuario
                 Usuarios usuario = new Usuarios(idUsuario, nombre, email, contrasena, tipoUsuario);
 
                 if ("guardar".equals(accion)) {
@@ -53,11 +60,21 @@ public class UsuariosServlet extends HttpServlet {
                     mensaje = "Usuario actualizado exitosamente.";
                 }
             } else if ("desactivar".equals(accion)) {
-                int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+                // Validar idUsuario antes de convertirlo
+                String idUsuarioParam = request.getParameter("idUsuario");
+                int idUsuario = (idUsuarioParam != null && !idUsuarioParam.isEmpty())
+                                ? Integer.parseInt(idUsuarioParam)
+                                : 0;
+
                 usuariosDAO.desactivarUsuario(idUsuario);
                 mensaje = "Usuario desactivado exitosamente.";
             } else if ("restablecer".equals(accion)) {
-                int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+                // Validar idUsuario antes de convertirlo
+                String idUsuarioParam = request.getParameter("idUsuario");
+                int idUsuario = (idUsuarioParam != null && !idUsuarioParam.isEmpty())
+                                ? Integer.parseInt(idUsuarioParam)
+                                : 0;
+
                 String nuevaContrasena = request.getParameter("contrasena");
                 usuariosDAO.restablecerContrasena(idUsuario, nuevaContrasena);
                 mensaje = "Contraseña restablecida exitosamente.";
@@ -67,6 +84,9 @@ public class UsuariosServlet extends HttpServlet {
 
             // Redirigir tras acción
             response.sendRedirect(request.getContextPath() + "/usuarios?mensaje=" + mensaje);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            response.sendRedirect(request.getContextPath() + "/usuarios?error=Formato de número inválido para ID de usuario.");
         } catch (Exception e) {
             e.printStackTrace();
             response.sendRedirect(request.getContextPath() + "/usuarios?error=Ocurrió un error al procesar la solicitud.");

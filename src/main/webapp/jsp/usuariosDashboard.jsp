@@ -40,13 +40,25 @@
 </head>
 <body>
     <div class="container">
-        <!-- Botón para regresar -->
+        <!-- Botón para cerrar sesión -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h1>Bienvenido, ${usuario.nombreUsuario}</h1>
             <form method="post" action="${pageContext.request.contextPath}/logout">
                 <button type="submit" class="btn btn-danger">Cerrar Sesión</button>
             </form>
         </div>
+
+        <!-- Mensajes de éxito o error -->
+        <c:if test="${not empty mensaje}">
+            <div class="alert alert-success" role="alert">
+                ${mensaje}
+            </div>
+        </c:if>
+        <c:if test="${not empty error}">
+            <div class="alert alert-danger" role="alert">
+                ${error}
+            </div>
+        </c:if>
 
         <div class="row">
             <!-- Libros Disponibles -->
@@ -63,12 +75,11 @@
                         </thead>
                         <tbody>
                             <c:forEach var="item" items="${items}">
-                                <tr onclick="seleccionarLibro(${item.idItem}, '${item.titulo}')">
+                                <tr>
                                     <td>${item.titulo}</td>
                                     <td>${item.autor}</td>
                                     <td>
-                                        <form method="post" action="${pageContext.request.contextPath}/prestamos">
-                                            <input type="hidden" name="accion" value="crear">
+                                        <form method="post" action="${pageContext.request.contextPath}/usuarioPrestamo">
                                             <input type="hidden" name="idItem" value="${item.idItem}">
                                             <button type="submit" class="btn btn-success btn-sm">Solicitar Préstamo</button>
                                         </form>

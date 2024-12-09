@@ -25,22 +25,19 @@ public class IndexServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
-        response.setHeader("Pragma", "no-cache");
-        response.setDateHeader("Expires", 0);
         try {
-            // Obtener la lista de ítems disponibles
-            List<Item> itemsDisponibles = itemDAO.listarTodos();
+           
+            List<Item> items = itemDAO.listarTodos();
 
-            // Pasar los ítems al JSP
-            request.setAttribute("items", itemsDisponibles);
+            
+            request.setAttribute("items", items);
 
-            // Redirigir al index.jsp
+           
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
-            // Enviar al usuario a una página de error si algo falla
-            request.setAttribute("error", "Error al cargar la lista de ítems: " + e.getMessage());
+            
+            request.setAttribute("error", "Error al cargar los datos.");
             request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
         }
     }

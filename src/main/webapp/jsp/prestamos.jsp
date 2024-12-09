@@ -17,7 +17,7 @@
             background-color: #f8f9fa;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
         }
         .scrollable-table {
             max-height: 300px;
@@ -30,7 +30,6 @@
 </head>
 <body>
     <div class="container mt-4">
-        <!-- Botón para regresar al dashboard -->
         <div class="d-flex justify-content-end">
             <a href="${pageContext.request.contextPath}/adminDashboard" class="btn btn-outline-dark mb-3">Regresar al Dashboard</a>
         </div>
@@ -39,9 +38,9 @@
 
         <div class="row">
             <!-- Panel izquierdo -->
-            <div class="col-md-7">
+            <div class="col-md-4">
                 <div class="mb-4">
-                    <h2>Usuarios</h2>
+                    <h2>Seleccione Usuario</h2>
                     <input type="text" id="buscarUsuarios" class="form-control mb-2" placeholder="Buscar usuarios...">
                     <div class="scrollable-table">
                         <table class="table table-striped table-hover">
@@ -55,7 +54,7 @@
                             </thead>
                             <tbody id="tablaUsuarios">
                                 <c:forEach var="usuario" items="${usuarios}">
-                                    <tr onclick="seleccionarUsuario(${usuario.idUsuario}, '${usuario.nombreUsuario}')">
+                                    <tr onclick="seleccionarUsuario('${usuario.idUsuario}', '${usuario.nombreUsuario}')">
                                         <td>${usuario.idUsuario}</td>
                                         <td>${usuario.nombreUsuario}</td>
                                         <td>${usuario.email}</td>
@@ -68,7 +67,7 @@
                 </div>
 
                 <div class="mb-4">
-                    <h2>Ejemplares</h2>
+                    <h2>Seleccione Ejemplar</h2>
                     <input type="text" id="buscarEjemplares" class="form-control mb-2" placeholder="Buscar ejemplares...">
                     <div class="scrollable-table">
                         <table class="table table-striped table-hover">
@@ -82,7 +81,7 @@
                             </thead>
                             <tbody id="tablaEjemplares">
                                 <c:forEach var="item" items="${items}">
-                                    <tr onclick="seleccionarItem(${item.idItem}, '${item.titulo}')">
+                                    <tr onclick="seleccionarItem('${item.idItem}', '${item.titulo}')">
                                         <td>${item.idItem}</td>
                                         <td>${item.titulo}</td>
                                         <td>${item.autor}</td>
@@ -93,31 +92,29 @@
                         </table>
                     </div>
                 </div>
-
-                <div>
-                    <h2>Registrar Préstamo</h2>
-                    <form method="post" action="prestamos">
-                        <input type="hidden" name="accion" value="crear">
-                        <input type="hidden" name="idUsuario" id="idUsuario">
-                        <input type="hidden" name="idItem" id="idItem">
-                        <div class="mb-3">
-                            <label class="form-label">Fecha de Préstamo:</label>
-                            <input type="date" class="form-control" name="fechaPrestamo" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Fecha de Devolución:</label>
-                            <input type="date" class="form-control" name="fechaDevolucion" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Registrar</button>
-                    </form>
-                </div>
             </div>
 
             <!-- Panel derecho -->
-            <div class="col-md-5">
-                <h2>Préstamos</h2>
+            <div class="col-md-8">
+                <h2>Asignar fecha para préstamo</h2>
+                <form method="post" action="prestamos" onsubmit="mostrarResumen(event)">
+                    <input type="hidden" name="accion" value="crear">
+                    <input type="hidden" name="idUsuario" id="idUsuario">
+                    <input type="hidden" name="idItem" id="idItem">
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de Préstamo:</label>
+                        <input type="date" class="form-control" id="fechaPrestamo" name="fechaPrestamo" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de Devolución:</label>
+                        <input type="date" class="form-control" id="fechaDevolucion" name="fechaDevolucion" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary mb-4">Registrar</button>
+                </form>
+
+                <h2>Préstamos registrados</h2>
                 <input type="text" id="buscarPrestamos" class="form-control mb-2" placeholder="Buscar préstamos...">
-                <div class="scrollable-table" style="max-height: calc(300px * 2 + 32px);">
+                <div class="scrollable-table">
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
@@ -147,41 +144,57 @@
         </div>
     </div>
 
+    <!-- Ventanas emergentes (modales) -->
+    <div class="modal" id="modalMensaje" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Mensaje</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Mensaje dinámico -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         function seleccionarUsuario(id, nombre) {
             document.getElementById("idUsuario").value = id;
-            alert("Usuario seleccionado: " + nombre);
+            mostrarModal(`Usuario seleccionado: ${nombre}`);
         }
 
         function seleccionarItem(id, titulo) {
             document.getElementById("idItem").value = id;
-            alert("Ejemplar seleccionado: " + titulo);
+            mostrarModal(`Ejemplar seleccionado: ${titulo}`);
         }
 
-        function agregarFiltro(buscarId, tablaId) {
-            const input = document.getElementById(buscarId);
-            const table = document.getElementById(tablaId);
-            const rows = table.getElementsByTagName('tr');
+        function mostrarResumen(event) {
+            event.preventDefault();
+            const idUsuario = document.getElementById("idUsuario").value;
+            const idItem = document.getElementById("idItem").value;
+            const fechaPrestamo = document.getElementById("fechaPrestamo").value;
+            const fechaDevolucion = document.getElementById("fechaDevolucion").value;
 
-            input.addEventListener('input', () => {
-                const filter = input.value.toLowerCase();
-                for (let i = 0; i < rows.length; i++) {
-                    const cells = rows[i].getElementsByTagName('td');
-                    let match = false;
-                    for (let j = 0; j < cells.length; j++) {
-                        if (cells[j].textContent.toLowerCase().includes(filter)) {
-                            match = true;
-                            break;
-                        }
-                    }
-                    rows[i].style.display = match ? '' : 'none';
-                }
-            });
+            if (!idUsuario || !idItem) {
+                mostrarModal("Por favor, seleccione un usuario y un ejemplar antes de registrar el préstamo.");
+                return;
+            }
+
+            mostrarModal(`Préstamo registrado:<br>Usuario ID: ${idUsuario}<br>Ejemplar ID: ${idItem}<br>Fecha Préstamo: ${fechaPrestamo}<br>Fecha Devolución: ${fechaDevolucion}`);
+            setTimeout(() => event.target.submit(), 2000);
         }
 
-        agregarFiltro('buscarUsuarios', 'tablaUsuarios');
-        agregarFiltro('buscarEjemplares', 'tablaEjemplares');
-        agregarFiltro('buscarPrestamos', 'tablaPrestamos');
+        function mostrarModal(mensaje) {
+            const modalBody = document.getElementById("modalBody");
+            modalBody.innerHTML = mensaje;
+            const modal = new bootstrap.Modal(document.getElementById("modalMensaje"));
+            modal.show();
+        }
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

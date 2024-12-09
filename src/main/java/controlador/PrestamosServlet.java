@@ -80,13 +80,21 @@ public class PrestamosServlet extends HttpServlet {
 
         try {
             if ("crear".equals(accion)) {
-                crearPrestamo(request, usuario);
+                int idUsuario = Integer.parseInt(request.getParameter("idUsuario"));
+                int idItem = Integer.parseInt(request.getParameter("idItem"));
+                Date fechaPrestamo = Date.valueOf(request.getParameter("fechaPrestamo"));
+                Date fechaDevolucion = Date.valueOf(request.getParameter("fechaDevolucion"));
+
+                Prestamos prestamo = new Prestamos(0, idUsuario, idItem, fechaPrestamo, fechaDevolucion, false, 0.0);
+                prestamosDAO.insertarPrestamo(prestamo);
             } else if ("devolver".equals(accion)) {
-                devolverPrestamo(request);
+                int idPrestamo = Integer.parseInt(request.getParameter("idPrestamo"));
+                prestamosDAO.marcarDevuelto(idPrestamo, 0.0);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
-            request.setAttribute("error", "Ocurrió un error: " + e.getMessage());
+            request.setAttribute("error", "Error al procesar la solicitud: " + e.getMessage());
             request.getRequestDispatcher("/jsp/error.jsp").forward(request, response);
             return;
         }
